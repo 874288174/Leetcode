@@ -11,31 +11,21 @@
 class Solution {
 public:
     bool isSubtree(TreeNode* s, TreeNode* t) {
-        string str = treeTostring(t);
-        string treestr = "";
-        return findstr(s, treestr, str);
+        string strs = "#" + treeTostring(s) + "#";
+        string strt = "#" + treeTostring(t) + "#";
+        return strs.find(strt) != string::npos;
     }
     
 private:
     string treeTostring(TreeNode *t) {
-        if (!t) return "";
+        if (!t) return "Null";
         string l = treeTostring(t->left);
         string r = treeTostring(t->right);
-        return l + to_string(t->val) + r;
-    }
-    
-    bool findstr(TreeNode *t, string &treestr, string &s) {
-        if (!t) {
-            treestr = "";
-            return false;
-        }
-        string l, r;
-        if (findstr(t->left, l, s) || findstr(t->right, r, s)) return true;
-        treestr = l + to_string(t->val) + r;
-        return treestr == s;
+        return to_string(t->val) + "#" + l + "#" + r;
     }
 };
 */
+
 class Solution {
 public:
     bool isSubtree(TreeNode* s, TreeNode* t) {

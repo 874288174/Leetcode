@@ -18,17 +18,25 @@ public:
 
 
 
+
 /*
 class Solution {
 public:
     int findTargetSumWays(vector<int>& nums, int S) {
-        return dfs(nums, 0, S);
-    }
-private:
-    int dfs(vector<int>& nums, int cur, long S) {
-        if (cur == nums.size()) return S == 0 ? 1 : 0; 
-        return dfs(nums, cur+1, S+nums[cur])
-               + dfs(nums, cur+1, S-nums[cur]);  
+        int n = nums.size(), k = 1;
+        vector<unordered_map<int, int>> dp(2);
+        dp[0][0] = 1;
+        for (int i = 0; i < n; ++i) {
+            auto &cur = dp[k], &pre = dp[k^1];
+            cur.clear();
+            for (const auto &[j, t] : pre) {
+                cur[j+nums[i]] += t;
+                cur[j-nums[i]] += t;
+            }
+            k ^= 1;
+        }
+        return dp[k^1][S];
     }
 };
+
 */

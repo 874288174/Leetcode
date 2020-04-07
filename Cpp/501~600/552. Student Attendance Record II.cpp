@@ -2,22 +2,20 @@ class Solution {
 public:
     int checkRecord(int n) {
         if (n <= 0) return 0;
-        vector<long long> pre(6, 0);
-        pre[0] = 1;
+        vector<vector<long long>> v(2, vector<long long>(6, 0));
+        const long long Mod = 1e9+7;
+        v[0][0] = 1;
+        int k = 0;
         while (n--) {
-            vector<long long> cur(6, 0);
-            
-            cur[0] = pre[0] + pre[1] + pre[2];
-            cur[3] = cur[0] + pre[3] + pre[4] + pre[5];
-            
-            for (int k = 0; k < 6; k++) {
-                if (k % 3 == 0) continue; 
-                cur[k] += pre[k-1];
-            }
-    
-            for (auto &i : cur) i %= 1000000007; 
-            pre = cur;
+            auto &pre = v[k], &cur = v[k^1];
+            cur[0] = (pre[0] + pre[1] + pre[2]) % Mod;
+            cur[1] = pre[0];
+            cur[2] = pre[1];
+            cur[3] = (cur[0] + pre[3] + pre[4] + pre[5]) % Mod;
+            cur[4] = pre[3];
+            cur[5] = pre[4];
+            k ^= 1;
         }
-        return (accumulate(pre.begin(), pre.end(), (long long)0)) % 1000000007;
+        return (accumulate(v[k].begin(), v[k].end(), (long long)0)) % Mod;
     }
 };

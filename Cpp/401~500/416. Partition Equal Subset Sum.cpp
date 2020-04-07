@@ -8,7 +8,7 @@ public:
         dp[0] = true;
         for (int i = 0; i < n; i++) {
             for (int j = V; j >= 0; j--) {
-                if (j < nums[i])  continue;
+                if (j < nums[i]) break;
                 dp[j] = dp[j] || dp[j-nums[i]];
             }
             if (dp[V]) return true;

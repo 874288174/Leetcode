@@ -5,7 +5,7 @@ public:
         dp[0] = 1;
         for (auto &i : coins) {
             for (int s = 0; s <= amount; ++s) {
-                if (s-i >= 0) dp[s] += dp[s-i];
+                dp[s] += dp[s-i];
             }
         }
         return dp[amount];

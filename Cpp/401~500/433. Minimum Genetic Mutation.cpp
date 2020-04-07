@@ -14,7 +14,7 @@ public:
                 string s = q.front();
                 q.pop();
                 for (int i = 0; i < 8; i++) {
-                    int c = s[i];
+                    char c = s[i];
                     for (int j = 0; j < 4; j++) {
                         if (gene[j] == c) continue;
                         s[i] = gene[j];

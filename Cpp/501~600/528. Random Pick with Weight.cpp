@@ -15,12 +15,6 @@ public:
 
     int pickIndex() {
         int targ = uni(e);
-        int low = 0, high = v.size();
-        while (low < high) {
-            int mid = low + (high - low) / 2;
-            if (targ >= v[mid]) low = mid + 1;
-            else high = mid;
-        }
-        return low;
+        return upper_bound(v.begin(), v.end(), targ) - v.begin();
     }
 };

@@ -14,7 +14,7 @@ public:
             n >>= 1;
             cnt++;
         }
-        return  pow(2, cnt) - num - 1;
+        return  (static_cast<long long> (1) << cnt) - num - 1;
     }
 };
 */
