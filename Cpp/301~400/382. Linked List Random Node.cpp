@@ -18,7 +18,7 @@ public:
         int k = 1, cnt = 0; 
         vector<int> ret;
         ListNode *cur = head;
-        while (cur != nullptr) {
+        while (cur) {
             if (cnt++ < k) ret.push_back(cur->val);
             else {
                int t = rand() % cnt;
@@ -33,6 +33,7 @@ private:
     ListNode *head;
 };
 
+//tip 并行水塘抽样  https://www.jianshu.com/p/7a9ea6ece2af 
 /**
  * Your Solution object will be instantiated and called as such:
  * Solution* obj = new Solution(head);

@@ -1,22 +1,17 @@
 class Solution {
 public:
-    Solution(vector<int>& nums) {
-        int n = nums.size();
-        for (int i = 0; i < n; i++) {
-            m[nums[i]].push(i);
-        }
-    }
+    Solution(vector<int>& nums) : beg(nums.begin()), end(nums.end()) {}
     
     int pick(int target) {
-        queue<int> &q = m[target];
-        int ret = q.front();
-        q.pop();
-        q.push(ret);
-        return ret;
+        int res, n = 0;
+        for (auto it = beg; it != end; ++it) {
+            if (*it != target) continue;
+            if (rand() % ++n == 0) res = distance(beg, it);
+        }
+        return res;
     }
-
 private:
-    unordered_map<int, queue<int>> m;
+    vector<int>::iterator beg, end;
 };
 
 /**

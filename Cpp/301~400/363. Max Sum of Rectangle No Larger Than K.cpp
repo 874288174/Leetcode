@@ -1,28 +1,39 @@
 class Solution {
 public:
-    int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {
-       if (matrix.empty()) return 0;
-       int row = matrix.size(), col = matrix[0].size(), res = INT_MIN;
-       for (int l = 0; l < col; ++l) {
-          vector<int> sums(row, 0);
-          for (int r = l; r < col; ++r) {
-             for (int i = 0; i < row; ++i) {
-                sums[i] += matrix[i][r];
-             }
-            
-             // Find the max subarray no more than K 
-             set<int> mySet;
-             mySet.insert(0);
-             int curSum = 0, curMax = INT_MIN;
-             for (int sum : sums) {
-                curSum += sum;
-                auto it = mySet.lower_bound(curSum - k);
-                if (it != mySet.end()) curMax = std::max(curMax, curSum - *it);
-                mySet.insert(curSum);
-             }
-             res = std::max(res, curMax);
-          }
-       }
-       return res;
+    int maxSumSubmatrix(vector<vector<int>>& v, int k) {
+        int n = v.size(), m = v[0].size();
+        if (n > m) {
+            v = rotate(v);
+            swap(n, m);
+        }
+        int res = INT_MIN;
+        for (int i = 0; i < n; ++i) {
+            vector<int> S(m, 0);
+            for (int j = i; j < n; ++j) {
+                for (int a = 0; a < m; ++a) S[a] += v[j][a];
+                set<int> Myset{0};
+                int sum = 0;
+                for (auto a : S) {
+                    sum += a;
+                    auto it = Myset.lower_bound(sum-k);
+                    if (it != Myset.end()) {
+                        res = max(res, sum - *it);
+                    } 
+                    Myset.insert(sum);
+                }
+            }
+        }
+        return res;
+    }
+private:
+    vector<vector<int>> rotate(vector<vector<int>> &v) {
+        int n = v.size(), m = v[0].size();
+        vector<vector<int>> res(m, vector<int> (n));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                res[j][i] = v[i][j];
+            }
+        }
+        return res;
     }
 };

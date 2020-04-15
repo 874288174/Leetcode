@@ -36,16 +36,16 @@ public:
     
 private:
     NestedInteger deserialize1(istringstream &in) {
-        int number;
-        if (in >> number) 
+        if (isdigit(in.peek()) || in.peek() == '-') {
+            int number;
+            in >> number; 
             return NestedInteger(number);
-        in.clear(); //not clear all the message, bit clear error state flags
+        }
         in.get();
         NestedInteger list;
         while (in.peek() != ']') {
             list.add(deserialize1(in));
-            if (in.peek() == ',')
-                in.get();
+            if (in.peek() == ',') in.get();
         }
         in.get();
         return list;

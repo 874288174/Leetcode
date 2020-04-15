@@ -3,8 +3,8 @@ public:
     vector<double> calcEquation(vector<vector<string>> &es, vector<double> &vs, vector<vector<string>> &qs) {
         for (int i = 0; i < es.size(); i++) {
             string a = es[i][0], b = es[i][1];
-            if (!id.count(a)) id[a] = node(a, 1);
-            if (!id.count(b)) id[b] = node(b, 1);
+            if (!id.count(a)) id[a] = node(a);
+            if (!id.count(b)) id[b] = node(b);
             Union(a, b, vs[i]);
         }
         vector<double> res;
@@ -24,7 +24,7 @@ public:
 
 private:
     struct node {
-        node(string p = "", double v = 0) : parent(p), val(v){};
+        node(string p = "", double v = 1.0) : parent(p), val(v){};
         string parent;
         double val;
     };
@@ -38,7 +38,7 @@ private:
         }
         return s;
     }
-
+    
     void Union(string a, string b, double v) {
         double va = 1.0, vb = 1.0;
         string fa_a = find(a, va);

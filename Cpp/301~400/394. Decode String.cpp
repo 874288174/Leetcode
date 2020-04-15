@@ -1,28 +1,28 @@
 class Solution {
 public:
     string decodeString(string s) {
-        stack<string> chars;
-        stack<int> nums;
+        auto in = stringstream(s);
+        return myDecodeString(in);
+    }
+    
+private:
+    string myDecodeString(stringstream& in) {
         string res;
-        int num = 0;
-        for(auto &c : s) {
-            if (isdigit(c)) num = num*10 + (c-'0');                              
-            else if (isalpha(c)) res.push_back(c);                
-            else if (c == '[') {
-                chars.push(res);
-                nums.push(num);
-                res = "";
-                num = 0;
+        while (in.peek() != EOF && in.peek() != ']') {
+            if (!isdigit(in.peek())) {
+                char c;
+                in >> c;
+                res += c;
             }
-            else if (c == ']') {
-                string tmp = res;
-                int k = nums.top(); 
-                nums.pop();
-                res = chars.top();
-                chars.pop();
-                while (k--) res += tmp;
+            else {
+                int number;
+                in >> number;
+                in.get();    
+                string t = myDecodeString(in);
+                in.get();
+                while (number--) res += t;
             }
         }
         return res;
-     }
+    }
 };

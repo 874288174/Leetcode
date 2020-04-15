@@ -9,10 +9,10 @@ public:
     
     /** Returns a random shuffling of the array. */
     vector<int> shuffle() {
+        //random_shuffle(arr.begin(), arr.end());
         int n = nums.size();
         for (int i = 0; i < n; ++i) {
-            int j = rand() % (i + 1);
-            swap(arr[i], arr[j]);
+            swap(arr[i], arr[rand() % (i+1)]);
         }
         return arr;    
     }

@@ -1,4 +1,3 @@
-//可能还有更好思路
 class RandomizedCollection {
 public:
     RandomizedCollection() {}
@@ -6,23 +5,17 @@ public:
     bool insert(int val) {
         bool ret = !mp.count(val); 
         mp[val].push_back(nums.size());
-        nums.push_back({val, mp[val].size()-1});
+        nums.emplace_back(val, mp[val].size()-1);
         return ret;
     }
     
     bool remove(int val) {
         if (!mp.count(val)) return false;
         auto last = nums.back();
-        auto &delete_ps = mp[val];
-        int i = rand() % (int)delete_ps.size();
-        int delete_p = mp[val][i];
-        if (i != delete_ps.size()-1) {
-            delete_ps[i] = delete_ps.back();
-        }
-        mp[last.first][last.second] = delete_p;
-        nums[delete_p] = last;
-        delete_ps.pop_back();
-        if (delete_ps.empty()) mp.erase(val);
+        mp[last.first][last.second] = mp[val].back();
+        nums[mp[val].back()] = last;
+        mp[val].pop_back();
+        if (mp[val].empty()) mp.erase(val);
         nums.pop_back();
         return true;
     }
