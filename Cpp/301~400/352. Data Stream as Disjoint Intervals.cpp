@@ -1,41 +1,24 @@
 class SummaryRanges {
 public:
     /** Initialize your data structure here. */
-    SummaryRanges() {}
-    
     void addNum(int val) {
-        if (visited.count(val)) return;
-        visited.insert(val);
-        auto pos = lower_bound(v.begin(), v.end(), vector<int>{val, val});
-        bool ok = false;
-        if (pos != v.end() && (*pos)[0] == val+1) {
-            (*pos)[0] = val;
-            ok = true;
+        if (hash_set.count(val)) return;
+        hash_set.insert(val);
+        auto it = st.lower_bound({val, val});
+        int start = val, end = val;
+        if (it != st.begin() && (*prev(it))[1] + 1 == val) --it;
+        while (it != st.end() && val+1 >= (*it)[0] && val-1 <= (*it)[1]) {
+            start = min(start, (*it)[0]);
+            end = max(end, (*it)[1]);
+            it = st.erase(it);
         }
-        if (pos != v.begin() && (*prev(pos))[1] == val-1) {
-            (*prev(pos))[1] = val;
-            ok = true;
-        }
-        if (!ok) v.insert(pos, vector<int>{val, val});
-        else if (pos != v.begin() && pos != v.end()) {
-            if ((*prev(pos))[1] == (*pos)[0]) {
-                (*prev(pos))[1] = (*pos)[1];
-                v.erase(pos);
-            }
-        }
+        st.insert(vector<int> {start, end});
     }
     
     vector<vector<int>> getIntervals() {
-        return v;
+        return vector<vector<int>> (st.begin(), st.end());
     }
 private:
-    unordered_set<int> visited;
-    vector<vector<int>> v;
+    unordered_set<int> hash_set;
+    set<vector<int>> st;
 };
-
-/**
- * Your SummaryRanges object will be instantiated and called as such:
- * SummaryRanges* obj = new SummaryRanges();
- * obj->addNum(val);
- * vector<vector<int>> param_2 = obj->getIntervals();
- */
