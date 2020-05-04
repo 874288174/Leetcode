@@ -1,10 +1,10 @@
 class Solution {
 public:
-    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         vector<vector<int>> v(numCourses);
         vector<int> visited(numCourses, 0);
         for (auto &i : prerequisites) {
-            v[i.first].push_back(i.second);
+            v[i[0]].push_back(i[1]);
         }
         for (int i = 0; i < numCourses; i++) {
             if (visited[i] == 0) {

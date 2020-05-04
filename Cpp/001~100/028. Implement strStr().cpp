@@ -1,28 +1,6 @@
 class Solution {
 public:
     int strStr(string haystack, string needle) {
-        if (needle.empty()) return 0;
-        for(int i = 0; i < haystack.length(); i++){
-            bool ok = true;
-            if(haystack.length() - i < needle.length() ) break;
-            int ii = i;
-            for (int j = 0; j < needle.length(); j++){
-                if (haystack[ii++] != needle[j]){
-                    ok = false; break;
-                }
-            }
-            if(ok) return i;
-        }
-        return -1;
-    }
-};
-
-
-//////////////////////////KMP////////////////////////
-
-class Solution {
-public:
-    int strStr(string haystack, string needle) {
         int m = haystack.size(), n = needle.size();
         if (!n)  return 0;
         vector<int> f = get_fail(needle);
