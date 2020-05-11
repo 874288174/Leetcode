@@ -1,8 +1,7 @@
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
-        if (root && get_height(root) == -1) return false;
-        else return true;
+        return get_height(root) != -1;
     }
     int get_height(TreeNode *p) {
         if(p == nullptr) return 0;
