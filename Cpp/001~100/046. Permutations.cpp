@@ -5,7 +5,7 @@ public:
         vector<vector<int> >res;
         do{
             res.push_back(nums);
-        }while( Next_Permutation(nums) );
+        } while(Next_Permutation(nums));
         return res;
     }
     
@@ -31,23 +31,21 @@ public:
 class Solution {
 public:
     vector<vector<int> > permute(vector<int> &num) {
-        vector<vector<int> > res;
-        vector<int> out;
-        vector<int> visited(num.size(), 0);
-        permuteDFS(num, 0, visited, out, res);
-        return res;
+	    vector<vector<int>> res;
+	    dfs(num, 0, res);
+	    return res;
     }
     
-    void permuteDFS(vector<int> &num, int level, vector<int> &visited, vector<int> &out, vector<vector<int> > &res) {
-        if (level == num.size()) res.push_back(out);
-        else for (int i = 0; i < num.size(); ++i) {
-            if (!visited[i]) {
-                visited[i] = 1;
-                out.push_back(num[i]);
-                permuteDFS(num, level + 1, visited, out, res);
-                out.pop_back();    
-                visited[i] = 0;
-            }
-        }
+private:
+	void dfs(vector<int> &num, int cur, vector<vector<int>> &res)	{
+		if (cur >= num.size()) {
+		    res.push_back(num);
+		    return;
+		}
+		for (int i = cur; i < num.size(); i++) {
+		    swap(num[cur], num[i]);
+		    dfs(num, cur + 1, res);
+		    swap(num[cur], num[i]);
+		}
     }
 };

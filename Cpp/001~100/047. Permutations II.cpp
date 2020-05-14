@@ -5,7 +5,7 @@ public:
         vector<vector<int> >res;
         do{
             res.push_back(nums);
-        }while( Next_Permutation(nums) );
+        } while(Next_Permutation(nums));
         return res;
     }
     
@@ -30,25 +30,47 @@ public:
 //////////////////////////////////////////////////////////////////////////////DFS/////////////////////////////////
 class Solution {
 public:
-    vector<vector<int> > permuteUnique(vector<int> &num) {
-        vector<vector<int> > res;
-        vector<int> out;
-        vector<int> visited(num.size(), 0);
-        sort(num.begin(), num.end());
-        permuteUniqueDFS(num, 0, visited, out, res);
+    vector<vector<int>> permuteUnique(vector<int>& num) {
+        vector<vector<int>> res;
+        dfs(num, 0, res);
         return res;
     }
-    void permuteUniqueDFS(vector<int> &num, int level, vector<int> &visited, vector<int> &out, vector<vector<int> > &res) {
-        if (level == num.size()) res.push_back(out);
-        else for (int i = 0; i < num.size(); ++i) {
-            if (!visited[i]) {
-                if (i > 0 && num[i] == num[i - 1] && !visited[i - 1]) continue;
-                visited[i] = 1;
-                out.push_back(num[i]);
-                permuteUniqueDFS(num, level + 1, visited, out, res);
-                out.pop_back();
-                visited[i] = 0;
-            }
+    
+private:
+    void dfs(vector<int> &num, int cur, vector<vector<int>> &res)   {
+        if (cur >= num.size()) {
+            res.push_back(num);
+            return;
+        }
+        unordered_set<int> st;
+        for (int i = cur; i < num.size(); i++) {
+            if (st.count(num[i])) continue;
+            st.insert(num[i]);
+            swap(num[cur], num[i]);
+            dfs(num, cur + 1, res);
+            swap(num[cur], num[i]);
+        }
+    }
+};
+
+
+
+
+///////////////////////////////注意nums为值传递//////////////////////////////
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int> &nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+        permute(nums, 0, res);
+        return res;
+    }
+    void permute(vector<int> nums, int i, vector<vector<int>> &res) {
+        if (i == nums.size()) res.push_back(nums);
+        else for (int k = i; k < nums.size(); k++) {
+            if (i != k && nums[i] == nums[k]) continue;
+            swap(nums[i], nums[k]);
+            permute(nums, i+1, res);
         }
     }
 };

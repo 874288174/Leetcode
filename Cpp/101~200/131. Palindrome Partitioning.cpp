@@ -26,37 +26,4 @@ public:
         }
         return sub_palindrome[0];
     }
-};      
-        
-/*
-class Solution {
-public:
-    vector<vector<string>> partition(string s) {
-        vector<vector<string>> res;
-        vector<string> v;
-        dfs(0, s, v, res);
-        return res;
-    }
-    
-private:
-    void dfs(int i, string &s, vector<string> &v, vector<vector<string>> &res) {
-        if (i == s.length()) res.push_back(v);
-        else for (int j = i+1; j <= s.length(); j++) {
-            string x = s.substr(i, j-i);
-            if (is_palindrome(x)) { 
-                v.push_back(x);
-                dfs(j, s, v, res);
-                v.pop_back();
-            }   
-        }
-    }
-    
-    bool is_palindrome(string &s){
-        int l = 0, r = s.length()-1;
-        while (l < r) {
-            if (s[l++] != s[r--]) return false;
-        }
-        return true;
-    }
 };
-*/

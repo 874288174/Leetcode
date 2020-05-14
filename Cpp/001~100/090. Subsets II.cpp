@@ -26,9 +26,9 @@ public:
     vector<vector<int>> res;    
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
         unordered_map<int, int> My_map;
-        for(auto &i : nums) My_map[i]++;
+        for (auto &i : nums) My_map[i]++;
         vector<pair<int, int>> Nums;
-        for(auto &i : My_map) Nums.push_back({i.first, i.second});
+        for (auto &i : My_map) Nums.push_back({i.first, i.second});
         vector<int> v;
         dfs(0, Nums, v);
         return res;
@@ -40,10 +40,11 @@ private:
             return;
         }
         int x = Nums[cur].first, n = Nums[cur].second;
-        for(int i = 0; i <= n; i++) {
-           for (int j = 0; j < i; j++) v.push_back(x);
-           dfs(cur+1, Nums, v);
-           for (int j = 0; j < i; j++) v.pop_back();
+        dfs(cur+1, Nums, v);
+        for (int i = 0; i < n; i++) {
+            v.push_back(x);
+            dfs(cur+1, Nums, v);
         }
+        while (n--) v.pop_back();
     }
 };
