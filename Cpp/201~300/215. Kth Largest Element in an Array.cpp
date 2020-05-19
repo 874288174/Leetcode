@@ -16,12 +16,12 @@ private:
         while (l <= r) {
             while (l <= r && nums[l] >= pivot)  l++;
             while (l <= r && nums[r] <= pivot)  r--;
-            if (l <= r && nums[l] < pivot && nums[r] > pivot) {
+            if (l <= r) {
                 swap(nums[l++], nums[r--]);
             }
         }
         swap(nums[left], nums[r]); 
-        // swap(nums[left], nums[l];»áÔÚnums = [1] Ê±³ö´í 
+        // swap(nums[left], nums[l];ä¼šåœ¨nums = [1] æ—¶å‡ºé”™ 
         return r;
     }
 };

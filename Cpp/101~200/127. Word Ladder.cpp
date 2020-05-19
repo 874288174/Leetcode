@@ -1,10 +1,10 @@
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+    int ladderLength(string a, string b, vector<string>& v) {
         int res = 1;
         queue<string> q;
-        q.push(beginWord);
-        unordered_set<string> s(wordList.begin(), wordList.end());
+        q.push(a);
+        unordered_set<string> s(v.begin(), v.end());
         while (!q.empty()) {
             res++;
             int sz = q.size();
@@ -13,7 +13,7 @@ public:
                 q.pop();            
                 for (auto it = s.begin(); it != s.end();) {                
                     if (judge(t, *it)) {                    
-                        if (*it == endWord) return res;                    
+                        if (*it == b) return res;                    
                         q.push(*it);                    
                         it = s.erase(it);                
                     }               
@@ -42,39 +42,36 @@ private:
 /////////////////////////////////////////////////////////
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        dict = unordered_set<string>(wordList.begin(), wordList.end());
-        words1.insert(beginWord);
-		words2.insert(endWord);
-        if (!dict.count(endWord)) return 0;
-		if (beginWord == endWord) return 1;
-        return ladderLengthHelper(words1, words2, 1);
-    }
-private:
-    unordered_set<string> dict, words1, words2;
-
-    int ladderLengthHelper(unordered_set<string> &words1, unordered_set<string> &words2, int level) {
-		if (words1.empty()) return 0;
-		if (words1.size() > words2.size())
-			return ladderLengthHelper(words2, words1, level);
-		for (auto it : words1) dict.erase(it);
-		for (auto it : words2) dict.erase(it);
-        unordered_set<string> words3;
-        for (auto it = words1.begin(); it != words1.end(); ++it) {
-			string word = *it;
-			for (auto ch = word.begin(); ch != word.end(); ++ch) {
-				char tmp = *ch;
-                for (*ch = 'a'; *ch <= 'z'; ++(*ch)) {
-					if (*ch != tmp)
-						if (words2.find(word) != words2.end())
-                            return level + 1;
-						else if (dict.find(word) != dict.end()) {
-                            words3.insert(word);
+    int ladderLength(string a, string b, vector<string>& v) {
+        unordered_set<string> s(v.begin(), v.end());
+        if (!s.count(b)) return 0;
+        s.erase(a);
+        s.erase(b);
+        unordered_set<string> nextWords{a}, prevWords{b};
+        int ladder = 2, len = a.length();
+        while (!nextWords.empty() && !prevWords.empty()) {
+            if (nextWords.size() > prevWords.size())
+                swap(nextWords, prevWords);
+            unordered_set<string> temp;
+            for (auto s : nextWords) {
+                string word = s;
+                for (int p = 0; p < len; p++) {
+                    char letter = word[p];
+                    for (int j = 0; j < 26; j++) {
+                        word[p] = 'a' + j; 
+                        if (prevWords.count(word))
+                            return ladder;
+                        if (s.count(word)) {
+                            temp.insert(word);
+                            s.erase(word);
                         }
+                    }
+                    word[p] = letter;
                 }
-				*ch = tmp;
             }
+            swap(nextWords, temp);
+            ladder++; 
         }
-        return ladderLengthHelper(words2, words3, level+1);
+        return 0;
     }
-}
+};

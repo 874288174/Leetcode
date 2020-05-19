@@ -16,30 +16,24 @@ public:
 /*
 class Solution {
 public:
-    struct cmp{
-       bool operator () (int &lhs, int &rhs) const {
-           return lhs > rhs;
-       }  
-    };
+    using ll = long long;
     
     int nthUglyNumber(int n) {
-        int a[3] = {2, 3, 5};
-        priority_queue<int, vector<int>, greater<int>> pq;
-    //  priority_queue<int, vector<int>, cmp> pq;
-        unordered_set<int> My_set;
+        ll a[3] = {2, 3, 5};
+        priority_queue<ll, vector<ll>, greater<ll>> pq;
+        unordered_set<ll> My_set;
         pq.push(1);
         while (--n) {
             int t = pq.top();
             pq.pop();
-            for (int i : a) {
-                if(INT_MAX / i < t) continue;
+            for (auto i : a) {
                 i *= t;
                 if (My_set.count(i)) continue;
                 My_set.insert(i);
                 pq.push(i);
             }
         }
-        return pq.top();
+        return static_cast<int> (pq.top());
     }
 };
 */
