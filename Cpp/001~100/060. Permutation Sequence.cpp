@@ -1,30 +1,28 @@
 class Solution {
 public:
     string getPermutation(int n, int k) {
-    string s(n, '0');
-    for (int i = 0; i < n; ++i) s[i] += i + 1;
-    return kth_permutation(s, k);
-}
+        string s(n, '0');
+        for (int i = 0; i < n; ++i) s[i] += i + 1;
+        // åº·æ‰˜ç¼–ç ä»0å¼€å§‹
+        return kth_permutation(s, n, k-1);
+    }
     
 private:
     int factorial(int n) {
-        int result = 1;
-        for (int i = 1; i < n+1; ++i)  result *= i;
-        return result;
+        int res = 1;
+        while (n)  res *= n--;
+        return res;
     }
 
-    string kth_permutation(string &s, int k) {
-        int n = s.size();
+    string kth_permutation(string &s, int n, int k) {
         string res;
-        int base = factorial(n - 1);
-        --k; // ¿µÍĞ±àÂë´Ó0¿ªÊ¼
-        for (int i = n - 1;; i--) {
+        int base = factorial(n);
+        for (int i = n; i > 0; i--) {
+            base /= i;
             auto a = next(s.begin(), k / base);
             res.push_back(*a);
             s.erase(a);
-            if(!i) break;
             k %= base;
-            base /= i;
         }
         return res;
     }
