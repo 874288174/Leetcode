@@ -2,19 +2,19 @@ class Solution {
 public:
     int maxProfit(int k, vector<int> &prices) {
         if (prices.empty()) return 0;
-        int n = prices.size();
-        if (k >= n) return maxProfit(prices);
-        vector<int> g(k+1, 0), l(k+1, 0);
-        for (int i = 1; i < n; i++) {
-            int diff = prices[i] - prices[i-1];
-            for (int j = k; j >= 1; j--) {
-                l[j] = max(g[j-1] + max(diff, 0), l[j] + diff);
-                g[j] = max(g[j], l[j]);
+        int N = prices.size();
+        if (k >= N) return maxProfit(prices);
+        vector<int> buy(k + 1, INT_MIN);
+        vector<int> sell(k + 1, 0);
+        //buy代表交易k次且付钱买入一件
+        for (int i = 0; i < N; ++i) {
+            for (int j = 1; j <= k; ++j) {
+                buy[j] = max(buy[j], sell[j - 1] - prices[i]);
+                sell[j] = max(sell[j], buy[j] + prices[i]);
             }
         }
-        return g[k];
+        return max(buy[k], sell[k]);
     }
-    
 private:
     int maxProfit(vector<int>& prices) {
         int Buy = INT_MAX, res = 0;
@@ -24,4 +24,4 @@ private:
         }
         return res;
     }
-}
+};
