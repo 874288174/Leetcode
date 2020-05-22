@@ -1,50 +1,40 @@
 class Solution {
 public:
     vector<string> wordBreak(string s, vector<string>& wordDict) {
-        n = s.size(), max_len = 0, min_len = INT_MAX; 
-        unordered_set<string> dict;
+        size_t n = s.size(), max_len = 0, min_len = INT_MAX; 
+        unordered_set<string> dict(wordDict.begin(), wordDict.end());
         for(auto &i : wordDict) {
             max_len = max(max_len, i.length());
             min_len = min(min_len, i.length());
-            dict.insert(i);
         }
-  
-        vector<vector<bool>> prev(n+1, vector<bool>(n+1, false));
         vector<bool> f(n+1, false);
-        f[0] = true;
-        
-        for (int i = 1; i <= n; ++i){
-            for (int j = i-min_len; j >= 0; --j) {
-                if (i-j > max_len) break;
-                string word = s.substr(j, i-j);
-                if (f[j] && dict.find(word) != dict.end()) {
-                    prev[j][i] = f[i] = true;
+        vector<vector<int>> v(n);
+        f[n] = true;  
+        for (int i = n-1; i >= 0; --i){
+            for (int j = i+min_len; j <= n && j-i <= max_len; j++) {
+                string word = s.substr(i, j-i);
+                if (f[j] && dict.count(word)) {
+                    f[i] = true;
+                    v[i].push_back(j);
                 }
             }
         }
-        
-        vector<string> res, path;
-        dfs(n, s, path, prev, res);
+        dfs(0, n, s, v);
         return res;
     }
-    
 private:
-    size_t n ,max_len, min_len; 
+    vector<string> res, path;
     
-    void dfs(int i, string &s, vector<string> &path, vector<vector<bool>> &prev, vector<string> &res) {
-        if (i == 0) {
-            string t;
-            for (auto iter = path.rbegin(); iter != path.rend(); iter++)
-                t += *iter+' ';
-            t.erase(t.end()-1);
-            res.push_back(t);
-            return;
-        }
-        else for (int j = i-min_len; j >= 0; --j) {
-            if (i-j > max_len) break;
-            if (prev[j][i]) {
-                path.push_back(s.substr(j, i-j));
-                dfs(j, s, path, prev, res);
+    void dfs(int i, int n, string &s, vector<vector<int>> &v) {
+        if (i == n) {
+            string s;
+            for (auto &i : path) s += (s == "" ? "" : " ") + i;
+            res.push_back(s);
+        } 
+        else {
+            for (auto j : v[i]) {
+                path.emplace_back(s.substr(i, j-i));
+                dfs(j, n, s, v);
                 path.pop_back();
             }
         }
@@ -53,3 +43,27 @@ private:
 
 
 
+
+/////////////////////////////////////////////////////////////////
+class Solution {
+public:
+    vector<string> wordBreak(string s, vector<string>& t) {
+        size_t max_len = 0, min_len = INT_MAX; 
+        for(auto &i : t) {
+            max_len = max(max_len, i.length());
+            min_len = min(min_len, i.length());
+        }
+        unordered_set<string> wordDict(t.begin(), t.end());
+        unordered_map<int, vector<string>> dp{{s.size(), {""}}};
+        function<vector<string>(int)> f = [&](int i) {
+            if (!dp.count(i))
+                for (int j = i+min_len; j <= s.size() && j-i <= max_len; j++)
+                    if (wordDict.count(s.substr(i, j-i)))
+                        for (auto tail : f(j))
+                            dp[i].emplace_back(s.substr(i, j-i) 
+                                               + (tail == "" ? "" : ' ' + tail));
+            return dp[i];
+        };
+        return f(0);
+    }
+};
