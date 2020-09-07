@@ -22,3 +22,23 @@ where s1.people >= 100
         or (s1.id - 2 = s2.id and s1.id - 1 = s3.id))    
 group by s1.id
 order by s1.id
+
+
+
+
+with t1 as (
+                select id, visit_date, people,
+                       id-rank() over(order by id) rk
+                from stadium
+                where people >= 100
+            )
+
+
+select id, visit_date, people
+from t1
+where rk in (
+                select rk 
+                from t1 
+                group by rk 
+                having count(*) >= 3
+            );
