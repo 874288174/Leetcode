@@ -9,7 +9,7 @@ public:
         for (int i = 0; i < n; i++)  v[i] = {nums[i], i}; 
         merge_sort(v.begin(), v.end(), res);  
         return res;
-}
+    }
 
 private:
     void merge_sort(vecIter l, vecIter r, vector<int> &res) {
