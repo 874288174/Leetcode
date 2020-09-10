@@ -1,14 +1,17 @@
 class Solution {
 public:
-    int removeCoveredIntervals(vector<vector<int>>& A) {
-        int res = 0, left = -1, right = -1;
-        sort(A.begin(), A.end());
-        for (auto& v: A) {
-            if (v[0] > left && v[1] > right) {
-                left = v[0];
-                ++res;
-            }
-            right = max(right, v[1]);
+    int removeCoveredIntervals(vector<vector<int>>& intervals) {
+        auto cmp = [](const vector<int> &lhs, const vector<int> &rhs) {
+            if (lhs[0] != rhs[0]) return lhs[0] < rhs[0];
+            else return lhs[1] > rhs[1];
+        };
+        
+        sort(intervals.begin(), intervals.end(), cmp);
+        int pre = intervals[0][0], res = intervals.size();
+        
+        for (auto &v : intervals) {
+            if (pre >= v[1]) --res;
+            else pre = v[1];
         }
         return res;
     }

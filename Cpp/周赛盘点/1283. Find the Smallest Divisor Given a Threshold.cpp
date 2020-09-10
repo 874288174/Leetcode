@@ -1,14 +1,10 @@
 class Solution {
 public:
     int smallestDivisor(vector<int>& nums, int threshold) {
-        sort(nums.begin(), nums.end());
-        int l = 1, r = nums.back();
+        int l = 1, r = INT_MAX;
         while (l < r) {
-            int mid = l + (r-l)/2;
-            int sum = 0;
-            for (auto &i : nums) {
-                sum += ceil(1.0 * i / mid);
-            }
+            int mid = l + (r-l)/2, sum = 0;
+            for (double i : nums) sum += ceil(i / mid);
             if (sum > threshold) l = mid+1; 
             else r = mid;
         }
