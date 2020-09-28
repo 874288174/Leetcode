@@ -8,14 +8,8 @@ public:
             if (i > nums.begin() && *i == *(i-1)) continue;
             auto j = i + 1, k = nums.end() - 1;
             while (j < k){
-                if (*i + *j + *k < 0)   {
-                    j++;
-                    while (j < k && *j == *(j-1)) j++;
-                }
-                else if (*i + *j + *k > 0)  {
-                    k--;
-                    while (j < k && *k == *(k+1)) k--;
-                }
+                if (*i + *j + *k < 0) j++;
+                else if (*i + *j + *k > 0)  k--;
                 else {
                     ans.push_back({*i,*j,*k});
                     j++; k--;

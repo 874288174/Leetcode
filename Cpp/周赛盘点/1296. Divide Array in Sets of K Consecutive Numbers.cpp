@@ -1,7 +1,9 @@
+//O(nlogn)
 class Solution {
 public:
     struct node {
-        int val, sz;  
+        int val, sz; 
+        node (int a, int b) : val(a), sz(b) {} 
         bool operator < (const node &rhs) const {
             if (val != rhs.val) return val > rhs.val;
             else return sz < rhs.sz;
@@ -13,17 +15,16 @@ public:
         sort(nums.begin(), nums.end());
         priority_queue<node> pq;
         for (auto i : nums) {
-            if (pq.empty()) pq.push({i, 1});
+            if (pq.empty()) pq.emplace(i, 1);
             else if (pq.top().val == i-1) {
                 if (pq.top().sz == k-1) pq.pop();
                 else {
-                    node t = {pq.top().val+1, pq.top().sz+1};
+                    node t(pq.top().val+1, pq.top().sz+1);
                     pq.pop();
                     pq.push(t);
                 }
             }
-            else pq.push({i, 1});
-            //cout << pq.size() << "\n";
+            else pq.emplace(i, 1);
         }
         return pq.empty();
     }
@@ -31,23 +32,22 @@ public:
 
 
 
+
+//O(n) 每个节点访问最多删2次
 class Solution {
 public:
     bool isPossibleDivide(vector<int>& nums, int k) {
-        unordered_map<int, int> ctr;
-        for (int num : nums)
-            ctr[num]++;
-        for (int num : nums) {
-            int start = num;
-            while (ctr[start - 1])
-                start--;
-            for (; start <= num; start++) {
-                int times = ctr[start];
-                if (times) {
-                    for (int victim = start; victim < start + k; victim++) {
-                        if (ctr[victim] < times)
+        unordered_map<int, int> mp;
+        for (int i : nums) mp[i]++;
+        for (int i : nums) {
+            int start = i;
+            while (mp[start - 1]) start--;
+            for (; start <= i; start++) {
+                int cnt = mp[start];
+                if (cnt) {
+                    for (int j = start; j < start + k; j++) {
+                        if ((mp[j] -= cnt) < 0)
                             return false;
-                        ctr[victim] -= times;
                     }
                 }
             }

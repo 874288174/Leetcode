@@ -1,15 +1,33 @@
 class Solution {
 public:
     int maxValueAfterReverse(vector<int>& A) {
-        int total = 0, res = 0, min2 = 123456, max2 = -123456, n = A.size();
-        for (int i = 0; i < n - 1; ++i) {
-            int a = A[i], b = A[i + 1];
-            total += abs(a - b);
-            res = max(res, abs(A[0] - b) - abs(a - b));
-            res = max(res, abs(A[n - 1] - a) - abs(a - b));
-            min2 = min(min2, max(a, b));
-            max2 = max(max2, min(a, b));
+        int n = A.size();
+        //a [b...c] d => a [c...b] d
+        int t0 = -1e9, t1 = -1e9, t2 = -1e9, t3 = -1e9, diff = 0, res = 0;
+        
+        for (int i = 1; i < n; i++) {
+            diff = max(diff, -abs(A[i]-A[i-1]) + abs(A[n-1]-A[i-1]));
         }
-        return total + max(res, (max2 - min2) * 2);
+
+        for (int i = n-2; i >= 0; i--) {
+            diff = max(diff, -abs(A[i]-A[i+1]) + abs(A[0]-A[i+1]));
+        }
+        
+        for (int i = 1; i < n; ++i) {
+            res += abs(A[i] - A[i-1]);
+            int tt0 = A[i-1] - A[i] - abs(A[i-1] - A[i]);
+            int tt1 = A[i-1] + A[i] - abs(A[i-1] - A[i]);
+            int tt2 = -A[i-1] - A[i] - abs(A[i-1] - A[i]);
+            int tt3 = -A[i-1] + A[i] - abs(A[i-1] - A[i]);
+            
+            diff = max({diff, t0+tt3, t1+tt2, t2+tt1, t3+tt0});
+            
+            t0 = max(tt0, t0);
+            t1 = max(tt1, t1);
+            t2 = max(tt2, t2);
+            t3 = max(tt3, t3);
+        }
+        
+        return res + diff;
     }
 };

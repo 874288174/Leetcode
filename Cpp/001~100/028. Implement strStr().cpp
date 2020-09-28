@@ -6,11 +6,11 @@ public:
         vector<int> f = get_fail(needle);
         for (int i = 0, j = 0; i < m;) {
             if (haystack[i] == needle[j]) { 
-                i++, j++;
+                i++;
+                if (++j == n)  return i-j;
             }
-            if (j == n)  return i-j;
-            if (i < m && haystack[i] != needle[j]) 
-                j ? j = f[j - 1] : i++;
+            else if (j) j = f[j - 1];
+            else i++;
         }
         return -1;
     }

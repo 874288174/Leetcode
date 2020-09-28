@@ -1,11 +1,26 @@
 class Solution {
 public:
-    int minTaps(int n, vector<int>& A) {
-        vector<int> dp(n + 1, n + 2);
-        dp[0] = 0;
-        for (int i = 0; i <= n; ++i)
-            for (int j = max(i - A[i] + 1, 0); j <= min(i + A[i], n); ++j)
-                dp[j] = min(dp[j], dp[max(0, i - A[i])] + 1);
-        return dp[n]  < n + 2 ? dp[n] : -1;
+    int minTaps(int n, vector<int>& nums) {
+        vector<int> maxRight(n+1);
+        for (int i = 0; i <= n; i++) {
+            int L = max(0, i-nums[i]);
+            int R = min(n, i+nums[i]);
+            maxRight[L] = max(maxRight[L], R);
+        }   
+
+        int cnt = 0, cur_right_most = 0;
+        
+        for(int i = 0; i < n && cur_right_most != n;){
+            if (i > cur_right_most){
+               return -1;
+            }
+            ++cnt;
+            int far = cur_right_most;
+            while (i <= cur_right_most) {
+                far = max(far, maxRight[i++]);
+            }
+            cur_right_most = far;
+        }
+        return cnt; 
     }
 };

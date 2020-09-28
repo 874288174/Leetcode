@@ -13,36 +13,3 @@ public:
         return s;
     }
 };
-
-
-
-
-class Solution {
-public:
-    string getHappyString(int n, int k) {
-        if (k > 3*(1 << (n-1))) return "";
-        --k;
-        string s;
-        while (1) {
-            int t = k / (1 << (n-1));
-            k -= t * (1 << (n-1));
-            char c;
-            if (s == "") c = 'a' + t;
-            else if (s.back() == 'a') {
-                if (t == 0) c = 'b';
-                else c = 'c';
-            }
-            else if (s.back() == 'b') {
-                if (t == 0) c = 'a';
-                else c = 'c';
-            }
-            else if (s.back() == 'c') {
-                if (t == 0) c = 'a';
-                else c = 'b';
-            }
-            s += c;
-            if (--n == 0) break;
-        }
-        return s;
-    }
-};

@@ -1,38 +1,37 @@
 class Solution {
 public:
+    const vector<vector<int>> dirs = {{1,0},{0,1},{-1,0},{0,-1}};
+
     int shortestPath(vector<vector<int>>& grid, int k) {
-        int rows=grid.size(), cols=grid[0].size();
-        int minSteps = max(0,rows+cols-2), obstacles=minSteps-1, minStepsNextRound=minSteps;
-        if(obstacles<=k) return minSteps; // take a shortcut if we can afford it
+        int n = grid.size(), m = grid[0].size();
+        if (max(0, n + m - 2) <= k-1) return max(0, n + m - 2);
 
-        vector<vector<int>> dirs = {{1,0},{0,1},{-1,0},{0,-1}};
-        list<vector<int>> togo; togo.push_back({0,0,k}); // BFS: {row, col, remaining k}
-        vector<int> visited(rows*cols, -1); // position -> k remaining
-        visited[0]=k;
-        int steps=0;
-        
-        while(togo.size()) {
+        queue<tuple<int, int, int>> q; 
+        q.emplace(0,0,k);
+        vector<int> visited(n*m, -1);
+        visited[0] = k;
+        int steps = 0, res = n*m;
+        while (!q.empty()) {
             steps++;
-			minSteps=minStepsNextRound;
-            for(int sz=togo.size();sz>0;sz--) {
-                int r=togo.front()[0], c=togo.front()[1], k=togo.front()[2];
-                togo.pop_front();
-                for(auto& d:dirs) {
-                    int rr=r+d[0], cc=c+d[1];
-                    if(rr<0 || rr>=rows || cc<0 || cc>=cols) continue;
-                    int kk = k-grid[rr][cc];
-                    if(visited[rr*cols+cc]>=kk) continue; // have been here passing less obstacles
-
-                    // maybe we can take a shortcut and go straight to the goal
-					// but jump only from the point closest to the target
-                    int stepsToTarget = rows-rr-1+cols-cc-1;
-                    if(stepsToTarget-1<=kk && stepsToTarget==minSteps-1) return steps+stepsToTarget;
-                    togo.push_back({rr,cc,kk});
-                    visited[rr*cols+cc]=kk;
-					minStepsNextRound=min(minStepsNextRound,stepsToTarget);
+            int sz = q.size();
+            while (sz--) {
+                //int x = get<0>(q.front()), y = get<1>(q.front()), k = get<2>(q.front());
+                auto [x, y, k] = q.front();
+                q.pop();
+                for (const auto& d : dirs) {
+                    int xx = x + d[0], yy = y + d[1], k - grid[xx][yy];
+                    if (xx < 0 || xx >= n || yy < 0 || yy >= m) continue;
+                    if (visited[xx*m+yy] >= kk) continue;
+                    
+                    int stepsToTarget = n-1-xx+m-1-yy;
+                    if (stepsToTarget-1 <= kk) 
+                        res = min(res, steps+stepsToTarget);
+                    if (stepsToTarget == 0) continue;
+                    q.emplace(xx,yy,kk);
+                    visited[xx*m+yy] = kk;
                 }
             }
         }
-        return -1;
+        return res != n*m ? res : -1;
     }
 };
