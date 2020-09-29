@@ -1,24 +1,26 @@
 class Solution {
 public:
-    unordered_map<int, string> memo;
-    
-    string build(const vector<int>& cost, const int& target) {
-        if (memo.count(target)) return memo[target];
-        string s, t;
-        for (int i = 0; i < 9; ++i)
-            if (cost[i] <= target) {
-                t = build(cost, target - cost[i]);
-                if (t != "*") {
-                    t = char('1' + i) + t;
-                    s = s.length() < t.length() ? t : s.length() == t.length() && s < t ? t : s;
+    string largestNumber(vector<int>& cost, int target) {
+        vector<string> dp(target + 1, "NAN");
+        dp[0] = "";
+
+        auto largeThan = [](string& s1, string& s2) {
+            if (s1.size() > s2.size()) return true;
+            else if (s1.size() < s2.size()) return false;
+            else return s1 > s2;
+        };
+
+        for (int i = 1; i <= cost.size(); ++i) {
+            for (int j = cost[i - 1]; j <= target; ++j) {
+                if (dp[j-cost[i-1]] != "NAN") {
+                    string newVal = to_string(i) + dp[j-cost[i-1]];
+                    if (dp[j] == "NAN" || largeThan(newVal, dp[j])) {
+                        dp[j] = newVal;
+                    }
                 }
             }
-        return memo[target] = s.empty() ? "*" : s;
-    }
-    
-    string largestNumber(vector<int>& cost, int target) {
-        memo[0] = "";
-        string ans = build(cost, target);
-        return ans == "*" ? "0" : ans;
+        }
+
+        return dp[target] == "NAN" ? "0" : dp[target];
     }
 };

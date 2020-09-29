@@ -1,55 +1,18 @@
 class Solution {
 public:
-    int kthSmallest(vector<vector<int>>& mat, int k) {        
-        vector<int> row(mat[0]);
-        for(int i = 1; i < mat.size(); ++i) {
-            vector<int> nr;  // next row
-            for(int j = 0; j < mat[i].size(); ++j)                          
-                for(auto pathSum : row) 
-                    nr.push_back(mat[i][j] + pathSum); // all possible path ends at [i,j] by far                    
-                            
-            sort(nr.begin(), nr.end());            
-            nr.resize( min(k, int(nr.size())) );
-            row=move(nr);         
+    int kthSmallest(vector<vector<int>>& mat, size_t k) {        
+        vector<int> row{0};
+        for(const auto &t : mat) {
+            vector<int> v;
+            for(const auto &i : t) {                        
+                for (const auto &pathSum : row) {
+                    v.emplace_back(i + pathSum);
+                }       
+            }
+            partial_sort(v.begin(), v.begin() + min(k, v.size()), v.end());            
+            v.resize(min(k, v.size()));
+            row = move(v);         
         }        
         return row[k-1];
-    }
-};
-
-
-
-
-
-
-
-
-
-class Solution {
-public:
-    int kthSmallest(vector<vector<int>>& mat, int k) {
-        vector<int> ans = {0};
-        int maxSize = k + 1;
-        
-        for(int i = 0; i < mat.size(); i++){
-            // cal
-            vector<int> temp;
-            for(int j = 0; j < mat[i].size(); j++){
-                for(int k = 0; k < ans.size(); k++){
-                    temp.push_back(mat[i][j] + ans[k]);
-                }
-            }
-            
-            sort(temp.begin(), temp.end());
-            
-            // update answer
-            ans.clear();
-            int till = min((int)maxSize, (int)temp.size()); // cut Line
-         
-            for(int j = 0; j < till; j++){
-                ans.push_back(temp[j]);
-            }
-            
-        }
-        return ans[k -1];
     }
 };

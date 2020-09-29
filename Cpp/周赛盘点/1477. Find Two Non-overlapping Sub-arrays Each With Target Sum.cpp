@@ -1,26 +1,28 @@
 class Solution {
 public:
-    int dp[100005][3];  //if asking for n subarrays, change 3 to n+1
-    unordered_map<int,int> sm;  // keep track of (prefixsum : index)  
+    unordered_map<int,int> mp{{0, 0}};  
     
     int minSumOfLengths(vector<int>& arr, int tar) {
         int n = arr.size(), cursum = 0;
-        sm[0] = 0;
-        memset(dp, 127, sizeof(dp));  //initialize to INF
-        for (int i = 0; i < 100005; i++) dp[i][0] = 0;  //if we doesn't find a subarray, len = 0
+        int k = 2;
+        vector<vector<int>> dp(n+1, vector<int> (k+1, 1e9));
+
+        for (int i = 0; i < dp.size(); i++) dp[i][0] = 0;  
         
         for (int i = 1; i <= n; i++) {
-            int d = -1;  //initialize to -1
+            int d = -1;  
             cursum += arr[i-1];
-            sm[cursum] = i;
-            if (sm.count(cursum - tar)) d = sm[cursum-tar];
+            mp[cursum] = i;
+            if (mp.count(cursum - tar)) d = mp[cursum-tar];
             
-            for (int j = 1; j <= 2; j++) {  // if asking for n subarrays, change 2 to n
-                dp[i][j] = min(dp[i][j], dp[i-1][j]);  //dp[i][j] must <= dp[i-1][j]
-                if (d != -1) dp[i][j] = min(dp[i][j],dp[d][j-1] + i - d);
+            for (int j = 1; j <= k; j++) {  
+                dp[i][j] = min(dp[i][j], dp[i-1][j]);  
+                if (d != -1) {
+                    dp[i][j] = min(dp[i][j], dp[d][j-1] + i - d);
+                }
             }
         }
-        if (dp[n][2] > 1e9) return -1;   // if asking for n subarrays, change 2 to n
-        return dp[n][2];   // if asking for n subarrays, change 2 to n
+        if (dp[n][k] >= 1e9) return -1;   
+        return dp[n][k];   
     }
 };
