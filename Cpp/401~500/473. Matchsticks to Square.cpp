@@ -3,9 +3,8 @@ public:
     bool makesquare(vector<int>& nums) {
         int n = nums.size(), all = 1 << n;
         if (n < 4) return false;
-        vector<bool> dp(all, false);
-        vector<int> total(all, 0);
-		dp[0] = true;
+        vector<int> dp(all, -1);
+		dp[0] = 0;
 		
 		int S = accumulate(nums.begin(), nums.end(), 0); 
         if (S % 4 != 0) return false;
@@ -13,19 +12,19 @@ public:
         sort(nums.begin(), nums.end(), greater<int>());
 		if (nums[0] > S) return false;
 		for(int i = 0; i < all; i++) {
-			if (!dp[i]) continue;
+			if (dp[i] == -1) continue;
 			for(int j = 0; j < n; j++) {
 				int temp = i | (1 << j);
 				if (temp != i) {
-					if (nums[j] > S - total[i]) break;
-					dp[temp] = true;
-					total[temp] = (nums[j] + total[i]) % S;
+					if (nums[j] > S - dp[i]) break;
+					dp[temp] = (nums[j] + dp[i]) % S;
 				}
 			}
 		}
-		return dp.back();
+		return dp.back() != -1;
     }
 };
+
 /*
 class Solution {
 public:

@@ -1,15 +1,17 @@
 class Solution {
 public:
-    int findMaxValueOfEquation(vector<vector<int>>& pts, int k) {
-        priority_queue<pair<int, int>> pq; // max-heap
-        pq.push({pts[0][1]-pts[0][0],pts[0][0]});
-        int ans= INT_MIN;
-        for(int i=1;i<pts.size();i++) {
-            int sum = pts[i][0]+pts[i][1];
-            while(!pq.empty() && pts[i][0]-pq.top().second>k) pq.pop();
-            if(!pq.empty())ans = max(ans,sum+pq.top().first);
-            pq.push({pts[i][1]-pts[i][0],pts[i][0]});
+    using PII = pair<int, int>;
+    int findMaxValueOfEquation(vector<vector<int>>& points, int k) {
+        deque<PII> dq;
+        int res = -2e9;
+        for(const auto &pnt : points) {
+            while (!dq.empty() && pnt[0] - dq.front().first > k) dq.pop_front();
+            if (!dq.empty()) 
+                res = max(res, dq.front().second + pnt[0] + pnt[1]);
+            while (!dq.empty() && dq.back().second <= pnt[1] - pnt[0]) 
+                dq.pop_back();
+            dq.emplace_back(pnt[0], pnt[1] - pnt[0]);
         }
-        return ans;
+        return res;
     }
 };

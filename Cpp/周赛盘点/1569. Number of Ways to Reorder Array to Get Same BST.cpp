@@ -19,16 +19,16 @@ public:
     
     ll dfs(vector<int>& nums) {
         int i = 0, j = nums.size()-1;
-        
         if (i >= j) return 1;
-        vector<int> v0, v1;
+        
+        vector<int> v[2];
         
         for (int k = i+1; k <= j; ++k) {
-            if (nums[k] > nums[i]) v0.push_back(nums[k]);
-            else v1.push_back(nums[k]);
+            int t = nums[k] < nums[i] ? 1 : 0;
+            v[t].push_back(nums[k]);
         }
         
-        ll a = dfs(v0), b = dfs(v1);
-        return (a*b % mod) * helper(v0.size(), v1.size()) % mod;
+        ll a = dfs(v[0]), b = dfs(v[1]);
+        return (a*b % mod) * helper(v[0].size(), v[1].size()) % mod;
     }
 };

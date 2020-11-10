@@ -7,11 +7,12 @@ public:
             if (num1 == 0) num2 += c == ')';
             else num1 -= c == ')';
         }
-        vector<string> ret;
-        dfs(s, 0, num1, num2, ret);
+        dfs(s, 0, num1, num2);
         return ret;
     }
 private:
+    vector<string> ret;
+
     bool isValid(string s) {
         int sum = 0;
         for(char &c : s) {
@@ -22,24 +23,22 @@ private:
         return sum == 0;
     }
     
-    void dfs(string &s, int cur, int num1, int num2, vector<string> &ret) {
+    void dfs(const string &s, int cur, int num1, int num2) {
         if (num1 == 0 && num2 == 0) {
-            if (isValid(s))
-                ret.push_back(s);
-            return;
+            if (isValid(s)) ret.push_back(s);
         } 
-        for (int i = cur; i < s.size(); ++i) {
+        else for (int i = cur; i < s.size(); ++i) {
             string tmp = s;
             if (num1 > 0 && tmp[i] == '(') {
                 if (i == cur || tmp[i] != tmp[i - 1]) {
                     tmp.erase(i, 1);
-                    dfs(tmp, i, num1 - 1, num2, ret);
+                    dfs(tmp, i, num1 - 1, num2);
                 }
             }
             if (num2 > 0 && tmp[i] == ')') {
                 if (i == cur || tmp[i] != tmp[i - 1]) {
                     tmp.erase(i, 1);
-                    dfs(tmp, i, num1, num2 - 1, ret);
+                    dfs(tmp, i, num1, num2 - 1);
                 }
             }
         }

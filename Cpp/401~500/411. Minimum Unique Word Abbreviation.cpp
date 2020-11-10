@@ -1,17 +1,12 @@
 class Solution {
 public:
    string minAbbreviation(string target, vector<string>& dictionary) {
-        int n = target.size();
-        int bound = 1 << n;
+        int n = target.size(), bound = 1 << n;
         unordered_set<int> dict;
-        for (const auto &s : dictionary) {
-            if (s.size() != n) continue;
-            int bits = 0;
-            int cur = bound >> 1;
+        for (const auto &s : dictionary) if (s.size() == n) {
+            int bits = 0, cur = bound >> 1;
             for (int i = 0; i < s.size(); i++) {
-                if (s[i] != target[i]) {
-                    bits |= cur;
-                }
+                if (s[i] != target[i]) bits |= cur;
                 cur >>= 1;
             }
             dict.emplace(bits);
@@ -20,8 +15,7 @@ public:
 
         int minSize = n, minMask = bound-1;
         auto len = [&](int mask) {
-            int cnt = 0, res = 0;
-            int temp = n;
+            int cnt = 0, res = 0, temp = n;
             while (temp--) {
                 if (mask&1) {
                     if (cnt) ++res;
@@ -31,10 +25,8 @@ public:
                 else ++cnt;
                 mask >>= 1;
             }
-            if (cnt) ++res;
-            return res;
+            return res + (cnt ? 1 : 0);
         };
-
 
         for (int mask = 1; mask < bound; mask++) {
             int sz = len(mask);
@@ -47,8 +39,7 @@ public:
                 }
             }
             if (!ok) continue;
-            minSize = sz;
-            minMask = mask;
+            minSize = sz;  minMask = mask;
         }
 
         ostringstream oss;

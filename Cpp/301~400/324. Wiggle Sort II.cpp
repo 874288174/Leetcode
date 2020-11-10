@@ -1,3 +1,20 @@
+//O(nlogn)
+class Solution {
+public:
+    void wiggleSort(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+	    vector<int> res(nums);
+	    int n = nums.size();
+	    int end0 = (n+1)/2 - 1, end1 = n - 1;
+	    for (int i = 0; i < n; i++) {
+	    	nums[i] = i % 2 == 0 ? res[end0--]: res[end1--] ;
+    	}
+    }
+};
+
+
+
+//O(n)
 class Solution {
 public:
     void wiggleSort(vector<int>& nums) {

@@ -4,7 +4,6 @@ public:
         int slen = s.size(), plen = p.size(); 
         int i = 0, j = 0, iStar = -1, jStar = -1;
         while (i < slen) {
-            cout << i << " " << j << "\n";
             if (j < plen && p[j] == '*') { 
                 //meet a new '*', update traceback i/j info
                 iStar = i;

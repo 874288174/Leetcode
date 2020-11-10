@@ -36,3 +36,12 @@ private:
     mt19937 rng{random_device{}()};
     uniform_real_distribution<double> uni{0, 1};
 };
+
+
+/*
+在半径r、R上的点应该满足f(r)/r = f(R)/R = C
+由归一性得f(x) = 2x
+现在问题是已经有U (0,1均匀分布，f(x)=1)该如何得到V (f(x)为2x)
+Fu(x) = P(U < x) = x = Fv(Fv^-1(x)) = P(V < Fv^-1(x)) = P(Fv(V) < x)
+所以U = Fv(V)=V^2， 即V=sqrt(U)
+*/

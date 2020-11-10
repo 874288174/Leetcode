@@ -26,3 +26,33 @@ private:
     
     int xs(int x) { return x == 1 ? 0 : x < 10 ? 1 : x < 100 ? 2 : 3; }
 };
+
+
+
+
+
+
+class Solution {
+public:
+    int xs(int x) { return x == 1 ? 0 : x < 10 ? 1 : x < 100 ? 2 : 3; }
+    const int INF = 0x3f3f3f3f;
+
+    int getLengthOfOptimalCompression(string s, int k) {
+        int n = s.size();
+        vector<vector<int>> dp(n+1,vector<int>(k+2, INF));
+        dp[0][0] = 0;
+
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 0; j <= k && j <= i; ++j) {
+                if (j < k) dp[i][j+1] = min(dp[i][j+1], dp[i-1][j]);
+                int cnt = 0, del = j;
+                for (int m = i; m <= n; ++m){
+                    s[m-1] == s[i-1] ? ++cnt : ++del;
+                    if (del > k) break;
+                    dp[m][del] = min(dp[m][del], xs(cnt) + 1 + dp[i-1][j]);
+                }
+            }
+        }
+        return dp[n][k];
+    }
+};

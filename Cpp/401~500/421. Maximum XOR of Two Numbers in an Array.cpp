@@ -19,25 +19,21 @@ public:
                 if (i & (1 << k)) {
                     if (!p->left) p->left = new TrieNode(1);
                     p = p->left;
-                }
-                else {
+                } else {
                     if (!p->right) p->right = new TrieNode(0);
                     p = p->right;
                 }
             }
         }
-        
         int search(int i) {
             TrieNode *p = this;
             int sum = 0;
             for(int k = 31; k >= 0; k--){
                 int tmp = i & (1 << k);
                 if (p->left && p->right){
-                    if (!tmp) p = p->left;
-                    else p = p->right;
-                } else {
-                    p = p->left ? p->left : p->right;
-                }
+                    p = tmp ? p->right : p->left;
+                } 
+                else p = p->left ? p->left : p->right;
                 sum += tmp ^ (p->val << k);
             }
             return sum;

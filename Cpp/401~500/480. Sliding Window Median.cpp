@@ -1,57 +1,64 @@
 class Solution {
 public:
-    vector<double> medianSlidingWindow(vector<int>& nums, int k) {    
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
         vector<double> res;
-        unordered_map<int, int> hash_table;
-        priority_queue<int> low;                                  // max heap
-        priority_queue<int, vector<int>, greater<int> > high;     // min heap
-
+        unordered_map<int, int> hash;
+        priority_queue<int, vector<int>> low;
+        priority_queue<int, vector<int>, greater<int>> high;
+        
         int i = 0;
-
+        
         while (i < k) low.push(nums[i++]);
-
-        for (int j = 0; j < k / 2; j++) {
+        for (int i = k/2; i > 0; --i) {
             high.push(low.top());
             low.pop();
         }
-
-        while (1) {
-        // get median of current window
-            res.push_back(k & 1 ? low.top() : (low.top() + high.top()) * 0.5);
-            if (i >= nums.size()) break;                          
-            int out_num = nums[i - k], in_num = nums[i++];          
-            int balance = out_num <= low.top() ? -1 : 1;
+        
+        auto pop_invalid_element = [&hash](auto &pq) {
+            while (!pq.empty() && hash[pq.top()])  { 
+                --hash[pq.top()]; 
+                pq.pop(); 
+            }
+        };
+        
+        while (true) {
+            pop_invalid_element(low);
+            pop_invalid_element(high);
             
-            ++hash_table[out_num];
-        // in_num enters window
-            if (!low.empty() && in_num <= low.top()) {
-                ++balance;
-                low.push(in_num);
-            } else {
+            if (k % 2) res.push_back(low.top());
+            else res.push_back(((double)low.top() + high.top()) / 2);
+            
+            if (i == nums.size()) break;
+            int out = nums[i-k], in = nums[i++], balance = 0;
+            
+            hash[out]++;
+            if (out <= low.top()) {
                 --balance;
-                high.push(in_num);
+                pop_invalid_element(low);
+            } 
+            else {
+                ++balance; 
+                pop_invalid_element(high);
             }
-
-        // re-balance heaps
-            if (balance < 0) {                  // `lo` needs more valid elements
-                low.push(high.top());
-                high.pop();
-                balance++;
+            
+            // now the top element is always valid
+            // the reason when low is empty we put 'in' into high is
+            // high is not always empty, and we should put it in high
+            // to sort it
+            if (!low.empty() && in <= low.top())  { 
+                ++balance; low.push(in); 
             }
-            if (balance > 0) {                  // `hi` needs more valid elements
-                high.push(low.top());
-                low.pop();
-                balance--;
+            else {
+                --balance; high.push(in); 
             }
-
-        // remove invalid numbers that should be discarded from heap tops
-            while (hash_table[low.top()]) {
-                hash_table[low.top()]--;
-                low.pop();
+            
+            //note: balance == -2 or 2 or 0
+            //now the top element is always valid
+            if (balance < 0)  {
+                low.push(high.top()); high.pop();
             }
-            while (!high.empty() && hash_table[high.top()]) {
-               hash_table[high.top()]--;
-               high.pop();
+            else if (balance > 0)  {
+                high.push(low.top()); low.pop();
             }
         }
         return res;
@@ -60,7 +67,10 @@ public:
 
 
 
-
+/*
+multiset插入相同数，为upper_bound返回值之前插入，即插入数在相同数的最后面
+删除数为lower_bound，即删除数为相同数的最前面
+*/
 class Solution {
 public:
     vector<double> medianSlidingWindow(vector<int>& nums, int k) {
@@ -69,19 +79,45 @@ public:
         auto mid = next(window.begin(), k / 2);
        
         for (int i = k;; i++) {
-        // Push the current median
             res.push_back(((double)(*mid) + *next(mid, k % 2 - 1)) * 0.5);
 
-        // If all done, break
             if (i == nums.size()) break;
 
-        // Insert incoming element
             window.insert(nums[i]);
             if (nums[i] < *mid)  mid--;                
 
-        // Remove outgoing element
             if (nums[i - k] <= *mid) mid++;
             window.erase(window.lower_bound(nums[i - k]));
+        }
+
+        return res;
+    }
+};
+
+//一个复杂但易懂的版本
+class Solution {
+public:
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
+        vector<double> res;
+        multiset<int> window(nums.begin(), nums.begin() + k);
+        auto mid = next(window.begin(), k / 2);
+       
+        for (int i = k;; i++) {
+            res.push_back(((double)(*mid) + *prev(mid, 1 - k % 2)) * 0.5);
+            if (i == nums.size()) break;
+            
+            window.insert(nums[i]);
+            
+            if (nums[i] < *mid && nums.size() % 2 == 1) --mid;
+            else if (nums[i] >= *mid && nums.size() % 2 == 0) ++mid;
+            
+            auto it = window.lower_bound(nums[i - k]);
+            
+            if (it == mid)  (nums.size() % 2 == 1) ? ++mid : --mid;
+            else if (nums[i-k] <= *mid && nums.size() % 2 == 1) ++mid;
+            else if (nums[i-k] > *mid && nums.size() % 2 == 0) --mid;                          
+            
+            window.erase(it);
         }
 
         return res;

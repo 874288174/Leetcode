@@ -1,22 +1,17 @@
 class Twitter {
 public:
-    struct cmp {
-        template <typename T>
-        bool operator() (T const &lhs, T const &rhs) {
-            return lhs.first > rhs.first;
-        }
-    };
-    
-    Twitter() {}
+    using pii = pair<int, int>;
     
     void postTweet(int userId, int tweetId) {
         follow(userId, userId);
         twitter[userId].push_back(make_pair(timestamp++, tweetId));
     }
-    
 
     vector<int> getNewsFeed(int userId) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> pq;
+        auto cmp = [] (const auto &lhs, const auto &rhs) {
+            return lhs.first > rhs.first;
+        };
+        priority_queue<pii, vector<pii>, decltype(cmp)> pq(cmp);
         for (auto &i : user[userId]) {
             for (auto &pii : twitter[i]) {
                 if (!pq.empty()  && pq.top().first > pii.first && pq.size() > 10) break;

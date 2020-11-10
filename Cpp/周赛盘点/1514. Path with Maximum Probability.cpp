@@ -1,30 +1,30 @@
 class Solution {
 public:
+    using pdi = pair<double, int>;
+
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& pro, int start, int end) {
-        vector<vector<pair<int, double>>> g(n);
-        for(int i=0; i<edges.size(); i++) {
-            g[edges[i][0]].push_back({edges[i][1], pro[i]});
-            g[edges[i][1]].push_back({edges[i][0], pro[i]});   
+        vector<vector<pdi>> g(n);
+        for(int i = 0; i < edges.size(); i++) {
+            g[edges[i][0]].emplace_back(pro[i], edges[i][1]);
+            g[edges[i][1]].emplace_back(pro[i], edges[i][0]);   
         }
-        vector<int> seen(n, 0);
+        vector<bool> seen(n, false);
         
-        priority_queue<pair<double, int>> q;
-        q.push({(double)1.0, start});
+        priority_queue<pdi> pq;
+        pq.emplace(1.0, start);
         
-        vector<double> mx(n, (double)0.0);
+        vector<double> mx(n, 0.0);
         mx[start] = 1.0;
         
-        while(!q.empty()) {
-            auto top = q.top();
-            q.pop();
-            double proba = top.first;
-            int node = top.second;
-            if(!seen[node]) {
-                seen[node]++;
-                for(auto &to: g[node]) {
-                    if (mx[to.first] < to.second*proba) {
-                        mx[to.first] = to.second*proba;
-                        q.push({mx[to.first], to.first});
+        while (!pq.empty()) {
+            auto [proba, node] = pq.top();
+            pq.pop();
+            if (!seen[node]) {
+                seen[node] = true;
+                for (const auto &[i, j] : g[node]) {
+                    if (mx[j] < i*proba) {
+                        mx[j] = i*proba;
+                        pq.emplace(mx[j],j);
                     }
                 }
             }

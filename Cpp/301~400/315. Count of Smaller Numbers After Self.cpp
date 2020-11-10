@@ -3,6 +3,7 @@ public:
     using pii = pair<int, int>;
     using vecIter = vector<pair<int, int>>::iterator;
     vector<int> countSmaller(vector<int>& nums) {
+        if (nums.empty()) return {};
         int n = nums.size();
         vector<pii> v(n);
         vector<int> res(n, 0);
@@ -23,16 +24,12 @@ private:
     
     void merge(vecIter l, vecIter r, vector<int> &res) {
         auto mid = l + (r-l)/2, p = l, q = mid;
-        while (p < mid || q < r) {
-            if (p < mid && q < r) {
-                if (q->first >= p->first) q++;
-                else {
-                    res[p->second] += r-q;
-                    p++;
-                }
+        while (p < mid && q < r) {
+            if (q->first >= p->first) q++;
+            else {
+                res[p->second] += r-q;
+                p++;
             }
-            else if (p < mid)  p++;
-            else q++;
         }
         inplace_merge(l, mid, r, greater<pii>());
     }
