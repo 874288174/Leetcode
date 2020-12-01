@@ -19,10 +19,10 @@ public:
                 auto [x, y, k] = q.front();
                 q.pop();
                 for (const auto& d : dirs) {
-                    int xx = x + d[0], yy = y + d[1], k - grid[xx][yy];
+                    int xx = x + d[0], yy = y + d[1];
                     if (xx < 0 || xx >= n || yy < 0 || yy >= m) continue;
+                    int kk = k - grid[xx][yy];
                     if (visited[xx*m+yy] >= kk) continue;
-                    
                     int stepsToTarget = n-1-xx+m-1-yy;
                     if (stepsToTarget-1 <= kk) 
                         res = min(res, steps+stepsToTarget);

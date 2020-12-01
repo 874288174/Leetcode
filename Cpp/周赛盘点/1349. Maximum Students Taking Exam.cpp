@@ -13,9 +13,9 @@ public:
             for (int j = 0; j < (1 << n); ++j) {
                 if ((j & valid) == j && !(j & (j >> 1))) {
                     for (int k = 0; k < (1 << n); ++k) {
-                        if (!(j & (k >> 1)) && !((j >> 1) & k) && pre[k] != -1) {
-                            cur[j] = max(cur[j], pre[k] + __builtin_popcount(j));
-                        }
+                        if (j&(k>>1) || (j>>1)&k || pre[k]==-1) 
+                            continue;
+                        cur[j]=max(cur[j],pre[k]+__builtin_popcount(j));
                     }
                 }
             }

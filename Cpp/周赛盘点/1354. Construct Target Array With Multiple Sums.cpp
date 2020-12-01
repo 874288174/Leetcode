@@ -1,41 +1,25 @@
+//逆推
+//设变化后的数组为 s X X X X ,其中s为最大值,和为sum
+//则变化而来的数字一定为s,则其他数字之和为sum-s
+//又已知变化之前的数字和为s,变化前的数字为s-(sum-s)
+//即变化之前的数组为s-(sum-s) X X X X
+//即只是将最大的数字减去sum-s即可
+//又因为sum-s为其他数字之和,若变化后的数字仍为最大值,只需再减去sum-s即可
+//即s = s % (sum-s) 这一步将多次变化合一
+//最后sum更新俄为现在的数组和
 class Solution {
 public:
     bool isPossible(vector<int>& A) {
-        long total = 0;
-        int n = A.size(), a;
+        long sum = accumulate(A.begin(), A.end(), 0l);
         priority_queue<int> pq(A.begin(), A.end());
-        for (int a : A)
-            total += a;
-        while (true) {
-            a = pq.top(); pq.pop();
-            total -= a;
-            if (a == 1 || total == 1)
-                return true;
-            if (a < total || total == 0 || a % total == 0)
-                return false;
-            a %= total;
-            total += a;
-            pq.push(a);
+        while (1) {
+            long s = pq.top(), other = sum-s;
+            pq.pop();
+            if (s == 1 || other == 1) return true;
+            if (s < other || other == 0 || s % other == 0) return false;
+            s %= other;
+            sum = other + s;
+            pq.push(static_cast<int>(s));
         }
-    }
-};
-
-
-
-
-class Solution {
-public:
-    bool isPossible(vector<int>& t) {
-        auto s = accumulate(begin(t), end(t), (long long)0);
-        auto i = max_element(begin(t), end(t)) - begin(t);
-        while (s > 1 && t[i] > s / 2) {
-            s -= t[i];
-            if (s <= 1)
-                return s;
-            t[i] = t[i] % s;
-            s += t[i];
-            i = max_element(begin(t), end(t)) - begin(t);
-        }
-        return s == t.size();
     }
 };

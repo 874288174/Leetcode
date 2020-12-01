@@ -16,19 +16,3 @@ public:
         return dp[0][n - 1];
     }
 };
-
-/*
-class Solution {
-public:
-    int longestPalindromeSubseq(string s) {
-        int n = s.length();
-        vector<vector<int>> g(n, vector<int>(n, 1));
-        for (int len = 1; len < n; len++) {
-            for (int i = 0, j = len; j < n; i++, j++) {
-                g[i][j] = s[i] != s[j] ?  max(g[i+1][j], g[i][j-1]) : (2 + (j-i > 1 ? g[i+1][j-1] : 0));
-            }
-        }
-        return g[0][n-1];
-    }
-};
-*/

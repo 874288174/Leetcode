@@ -8,58 +8,26 @@
  * };
  */
 class Solution {
-public:
-    int maxSumBST(TreeNode* root) {
-        if (!root) return 0;
-        dfs(root);
-        return res;
-    }
-private:
+public:  
     int res = 0;
     
-    tuple<bool, int, int, int> dfs(TreeNode *p) {
-        if (!p->left && !p->right) {
-            res = max(res, p->val);
-            return make_tuple(true, p->val, p->val, p->val);
-        }
-        auto l = p->left ? dfs(p->left) : make_tuple(true, p->val, p->val-1, 0);
-        auto r = p->right ? dfs(p->right) : make_tuple(true, p->val+1, p->val, 0);
-        bool ok = get<0>(l) && get<0>(r);
-        if (!ok) return make_tuple(false, 0, 0, 0);
-        else if (get<2>(l) >= p->val || p->val >= get<1>(r)) return make_tuple(false, 0, 0, 0);
-        else {
-            int t = get<3>(l) + get<3>(r) + p->val;
-            res = max(res, t);
-            return make_tuple(true, get<1>(l), get<2>(r), t);
-        }
+    int maxSumBST(TreeNode* root) {
+        findMaxBST(root);
+        return res;
     }
-};
-
-
-
-class Solution {
-public:
+    
     struct BSTNode {
         bool isBST;
-        int mn;
-        int mx;
-        int sum;
+        int mn, mx, sum;
     };
-    BSTNode findMaxBST(TreeNode* node, int& res) {
-        if (node != nullptr) {
-            BSTNode left = findMaxBST(node -> left, res);
-            BSTNode right = findMaxBST(node -> right, res);
-            bool isBST = (left.isBST and right.isBST and left.mx < node -> val and node -> val < right.mn);
-            int sum = node -> val + left.sum + right.sum;
-            if (isBST) res = max(res, sum);
-            return { isBST, min(node -> val, left.mn), max(node -> val, right.mx) , sum};
-        } else {
-            return { true, INT_MAX, INT_MIN, 0};
-        }
-    }
-    int maxSumBST(TreeNode* root) {
-        int res = 0;
-        findMaxBST(root, res);
-        return res;
+    
+    BSTNode findMaxBST(TreeNode* p) {
+        if (p == nullptr) return {true, INT_MAX, INT_MIN, 0};
+        BSTNode left = findMaxBST(p->left);
+        BSTNode right = findMaxBST(p->right);
+        bool isBST = left.isBST && right.isBST && left.mx < p->val && p->val < right.mn;
+        int sum = p->val + left.sum + right.sum;
+        if (isBST) res = max(res, sum);
+        return {isBST, min(p->val, left.mn), max(p->val, right.mx), sum};
     }
 };

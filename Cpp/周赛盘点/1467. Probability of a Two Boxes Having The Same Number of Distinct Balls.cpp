@@ -28,12 +28,9 @@ public:
         return dp[i][l][r][cl][cr] = ret;
     }
     
-    double f(int n) {
-        if (n == 0) return 1;
-        else return n*f(n-1);
-    }
-    
-    double C(double n, double i) {
-        return f(n) / f(i) / f(n-i); 
+    double C(int n, int i) {
+        if (i > n) return 0;
+        if (i == 0) return 1;
+        return C(n-1, i-1) + C(n-1, i);
     }
 };

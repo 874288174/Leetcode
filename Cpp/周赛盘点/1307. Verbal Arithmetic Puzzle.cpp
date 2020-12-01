@@ -29,9 +29,7 @@ public:
         
         for(int i = 0; i < 10; i++) {
             if (i2c[i] != -1) continue;
-        
-            if (i == 0 && l+1 == w[index].length()) continue;
-            
+            if (i == 0 && l+1 == w[index].length() && w[index].length() != 1) continue;
             i2c[i] = w[index][l]-'A';
             c2i[w[index][l]-'A'] = i;
             if (dfs(index+1, l, sum+i, w, r)) return true;

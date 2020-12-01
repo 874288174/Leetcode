@@ -9,7 +9,7 @@
 )
 union 
 (
-    elect title results
+    select title results
     from Movie_Rating a
     join Movies b on a.movie_id = b.movie_id
     where created_at like '2020-02%'

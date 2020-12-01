@@ -27,3 +27,44 @@ public:
         return dp[n-1];
     }
 };
+
+
+
+
+
+
+
+
+
+class Solution {
+public:
+    const int INF = 1e7;
+    
+    int minDifficulty(vector<int>& jobs, int days) {
+        const int n = jobs.size();
+        if (n < days) return -1;
+        vector<vector<int>> f(n, vector<int>(n));
+        for (int i = 0; i < n; ++i) {
+            int t = 0;
+            for (int j = i; j < n; ++j) {
+                f[i][j] = t = max(t, jobs[j]);
+            }
+        }
+
+        
+        vector<vector<int>> dp(2, vector<int> (n));
+        int k = 0;
+        for (int d = 1; d <= days; ++d) {
+            auto &cur = dp[k], &pre = dp[k^1];
+            for (int i = 0; i < n; ++i) {
+                cur[i] = INF;
+                if (d == 1) cur[i] = f[0][i];  
+                else for (int j = 0; j < i; ++j) {
+                    cur[i] = min(cur[i], pre[j] + f[j+1][i]);
+                }
+            }
+            k ^= 1;
+        }
+        return dp[k^1].back();
+    }
+};
