@@ -1,42 +1,4 @@
-class Solution {
-public:
-    int longestValidParentheses(string s) {
-        int res = 0, cnt = 0;
-        stack<int> S;
-        for (auto &c : s){
-            if (c == '(') {
-                ++cnt;
-                S.push(0); 
-            }
-            else if (S.empty() || !cnt) {
-                cnt = 0;
-                if( !S.empty() ) S.pop();
-            }
-            else{
-                int cur = 2;
-                while( !S.empty() && S.top() ){
-                    cur += S.top();
-                    S.pop();
-                }
-                S.pop();
-                while( !S.empty() && S.top() ){
-                    cur += S.top();
-                    S.pop();
-                }
-                S.push(cur);
-                cnt--;
-                res = max(res, cur);
-            } 
-        }
-        return res;
-    }
-};
-
-
-
-//////////////////////solution 2/////////////////////////////////////
-
-
+//////////////////////stack/////////////////////////////////////
 class Solution {
 public:
     int longestValidParentheses(string s) {
@@ -54,3 +16,32 @@ public:
         return res;
     }
 };
+
+
+
+
+
+
+
+//////////////////////dp/////////////////////////////////////
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        if (s.length() <= 1) return 0;    
+        int res = 0;
+        vector<int> dp(s.size(), 0);
+//dp[i] 表示以s[i]结尾最长匹配括号的长度
+        for (int i = 1; i < s.length(); i++){    
+            if (s[i] == '(') continue;    
+            if (s[i-1] == '(') {       
+                dp[i] = (i-2) >= 0 ? dp[i-2]+2 : 2;     
+                res = max(dp[i], res);
+            } else if (i-dp[i-1]-1 >= 0 && s[i-dp[i-1]-1] == '(') {  
+                dp[i] = dp[i-1] + 2+ ((i-dp[i-1]-2>=0) ? dp[i-dp[i-1]-2] : 0);   
+                res = max(dp[i], res);           
+            }
+        }
+        return res;    
+    }
+};
+

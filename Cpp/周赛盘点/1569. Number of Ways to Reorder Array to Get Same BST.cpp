@@ -6,10 +6,10 @@ public:
     ll dp[1002][1002] = {0};
     
     int helper(int i, int j) {
-        if (i == 0 && j == 0) return 0;
-        if (i == 0 || j == 0) return 1;
+        if (i < j) return 0;
+        if (j == 0) return 1;
         if (dp[i][j]) return dp[i][j];
-        return dp[i][j] = (helper(i-1, j) + helper(i, j-1)) % mod;
+        return dp[i][j] = (helper(i-1, j) + helper(i-1, j-1)) % mod;
     }
     
     
@@ -29,6 +29,6 @@ public:
         }
         
         ll a = dfs(v[0]), b = dfs(v[1]);
-        return (a*b % mod) * helper(v[0].size(), v[1].size()) % mod;
+        return (a*b % mod) * helper(v[0].size()+v[1].size(), v[1].size()) % mod;
     }
 };

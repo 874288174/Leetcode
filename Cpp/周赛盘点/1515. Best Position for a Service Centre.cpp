@@ -10,7 +10,7 @@ public:
         }
         double res = DBL_MAX, res_x = 0, res_y = 0;
         for (double delta = 10; delta >= 0.00001; delta /= 10) {
-            for (double x = left; x <= right; x += delta)
+            for (double x = left; x <= right; x += delta) {
                 for (double y = bottom; y <= top; y += delta) {
                     double d = 0;
                     for (auto &p : pos)
@@ -21,10 +21,11 @@ public:
                         res_y = y;
                     }
                 }
+            }
             left = res_x - delta;
             bottom = res_y - delta;
-            right = res_x + delta * 2;
-            top = res_y + delta * 2;
+            right = res_x + delta;
+            top = res_y + delta;
         }
         return res == DBL_MAX ? 0 : res;
     }

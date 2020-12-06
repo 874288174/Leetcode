@@ -42,12 +42,13 @@ public:
 
 class Solution {
 public:
+    using arr3 = array<int, 3>;
     int minimumEffortPath(vector<vector<int>>& h) {
         int n = h.size(), m = h[0].size();
         vector<vector<int>> dis(n, vector<int>(m, 1000000));
         vector<int> dir{0, 1, 0, -1, 0};
         auto cmp = [&](const auto &p1, const auto &p2) { return p1[0] >= p2[0]; };
-        priority_queue<array<int, 3>, vector<array<int, 3>>, decltype(cmp)> pq(cmp);
+        priority_queue<arr3, vector<arr3>, decltype(cmp)> pq(cmp);
         dis[0][0] = 0;
         pq.push({0, 0, 0});
         while (!pq.empty()) {
