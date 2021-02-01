@@ -23,8 +23,8 @@ public:
 
 class Solution {
 public:
-    constexpr static int mod=1e9+7, MX=2e3+10;
-    int mult(int a,int b){return (1ll*a*b)%mod;}
+    constexpr static int mod = 1e9+7, MX = 2e3+10;
+    int mult(int a,int b) {return (1ll*a*b)%mod;}
     int fact[MX],inv[MX],invfact[MX];
     
     void init_INV(){
@@ -36,7 +36,7 @@ public:
         }
     }
     int ncr(int n,int r){
-        if(r > n) return 0;
+        if (r > n) return 0;
         return (1LL * fact[n] * invfact[n-r] % mod) * 1LL *invfact[r] % mod;
     }
 
@@ -46,30 +46,4 @@ public:
         return ncr(n + k - 1, 2 * k);
     }
 
-};
-
-
-
-class Solution {
-public:
-    int numberOfSets(int n, int K) {
-        vector<vector<int>> dp(n, vector<int>(K + 1));
-        int kMod = 1e9 + 7;
-        
-        dp[1][1] = 1;
-        
-        for (int i = 2; i < n; i++)
-            dp[i][1] = (i + 1) * i / 2;
-        
-        vector<vector<int>> sum(n, vector<int>(K + 1));
-        
-        for (int i = 2; i < n; i++) {
-            for (int k = 2; k <= K; k++) {
-                if (k <= i)
-                    sum[i][k] =  (sum[i - 1][k] + dp[i - 1][k - 1]) % kMod;
-                dp[i][k] = (sum[i][k] + dp[i - 1][k]) % kMod;         
-            }
-        }        
-        return dp[n - 1][K];
-    }
 };

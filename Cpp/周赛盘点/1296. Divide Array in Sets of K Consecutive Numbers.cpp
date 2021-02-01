@@ -38,20 +38,22 @@ class Solution {
 public:
     bool isPossibleDivide(vector<int>& nums, int k) {
         unordered_map<int, int> mp;
-        for (int i : nums) mp[i]++;
+        for (int i : nums) ++mp[i];
         for (int i : nums) {
+            if (!mp.count(i)) continue;
             int start = i;
-            while (mp[start - 1]) start--;
-            for (; start <= i; start++) {
+            
+            while (mp.count(start - 1)) --start;
+            for (; start <= i; ++start) {
+                if (!mp.count(start)) continue;
                 int cnt = mp[start];
-                if (cnt) {
-                    for (int j = start; j < start + k; j++) {
-                        if ((mp[j] -= cnt) < 0)
-                            return false;
-                    }
+                for (int j = start; j < start + k; j++) {
+                    if ((mp[j] -= cnt) < 0) return false;
+                    else if (mp[j] == 0) mp.erase(j);
                 }
             }
         }
         return true;
     }
 };
+

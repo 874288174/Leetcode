@@ -1,6 +1,28 @@
 class Solution {
 public:
     int closestToTarget(vector<int>& arr, int target) {
+        int res = INT_MAX;
+        set<int> pre{arr[0]};
+        for (int num : arr) {
+            set<int> cur{num};
+            res = min(res, abs(num - target));
+            for (int i : pre) {
+                cur.insert(i & num);
+                res = min(res, abs((i & num) - target));
+            }
+            pre = std::move(cur);
+        }
+        return res;
+    }
+};
+
+
+
+////////////////////////////////以下未看//////////////////////////////
+
+class Solution {
+public:
+    int closestToTarget(vector<int>& arr, int target) {
         int len = (int)arr.size();
         vector<vector<int> > tab(30);
         for(int i = 0; i < len; i++)

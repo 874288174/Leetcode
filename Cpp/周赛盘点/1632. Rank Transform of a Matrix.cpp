@@ -1,44 +1,41 @@
 class Solution {
 public:
-    int n, m; 
-    vector<int> rows, cols;
-    
-    int find(vector<int> &ds, int i) {
-        return ds[i] < 0 ? i : ds[i] = find(ds, ds[i]);
-    }
-    void process(vector<vector<int>> &matrix, vector<pair<int, int>> &crds) {
-        vector<int> ds(n+m, -1);
-        for (auto [i, j] : crds) {
-            auto pi = find(ds, i), pj = find(ds, n + j);
-            if (pi != pj) {
-                ds[pi] = min({ds[pi], ds[pj], -max(rows[i], cols[j]) - 1});
-                ds[pj] = pi;
-            }
-        }
-        for (auto [i, j] : crds)
-            matrix[i][j] = rows[i] = cols[j] = -ds[find(ds, i)];
-    }
-    
     vector<vector<int>> matrixRankTransform(vector<vector<int>>& matrix) {
-        n = matrix.size(), m = matrix[0].size();
-        rows.resize(n);
-        cols.resize(m);
-        vector<array<int, 3>> v;
-        for (auto i = 0; i < n; ++i)
-            for (auto j = 0; j < m; ++j)
-                v.push_back({matrix[i][j], i, j});
-        sort(begin(v), end(v), [](const auto &a, const auto &b){ return a[0] < b[0]; });
-        vector<pair<int, int>> crds;
-        int last_val = INT_MAX;
-        for (auto &[val, i, j] : v) {
-            if (val != last_val) {
-                process(matrix, crds);
-                last_val = val;
-                crds.clear();
+        int m = matrix.size(), n = matrix[0].size();
+        map<int, vector<int>> mp;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                mp[matrix[i][j]].push_back(i*n + j);
             }
-            crds.emplace_back(i, j);
         }
-        process(matrix, crds);
-        return matrix;
+        
+        vector<int> rank(m + n, 0);
+        vector<vector<int>> res(m, vector<int>(n));
+        
+        for (auto &it: mp) {
+            vector<int> fa(m + n, 0);
+            iota(begin(fa), end(fa), 0);
+            
+            auto &v = it.second;
+            for (auto &a : v) {
+                int i = a / n, j = a % n;
+                int r1 = find(fa, i), r2 = find(fa, j + m);
+                fa[r1] = r2;
+                rank[r2] = max(rank[r1], rank[r2]); 
+            }
+            
+            auto rank2 = rank;
+            for (auto & a: v) {
+                int i = a / n, j = a % n;
+                int r = find(fa, i);
+                res[i][j] = rank2[i] = rank2[j + m] = rank[r] + 1;
+            }
+            rank = move(rank2);
+        }
+        return res;
+    }
+    
+    int find(vector<int> & fa, int x) {
+        return fa[x] == x ? fa[x] : fa[x] = find(fa, fa[x]);
     }
 };
