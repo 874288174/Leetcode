@@ -11,17 +11,16 @@ public:
         return nums[k-1];
     }
 private:
+//先right动， 再left动
     int partition(vector<int>& nums, int left, int right) {
-        int pivot = nums[left], l = left + 1, r = right;
-        while (l <= r) {
-            while (l <= r && nums[l] >= pivot)  l++;
-            while (l <= r && nums[r] <= pivot)  r--;
-            if (l <= r) {
-                swap(nums[l++], nums[r--]);
-            }
+        int pivot = nums[left], l = left, r = right;
+        while (l < r) {
+            while (l < r && nums[r] <= pivot)  r--;
+            nums[l] = nums[r];
+            while (l < r && nums[l] >= pivot)  l++;
+            nums[r] = nums[l];            
         }
-        swap(nums[left], nums[r]); 
-        // swap(nums[left], nums[l];会在nums = [1] 时出错 
-        return r;
+        nums[l] = pivot;
+        return l;
     }
 };

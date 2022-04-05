@@ -18,7 +18,41 @@ public:
     }
 };
 
-/*
+
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        vector<int> res(n, 0);
+        res[0] = 1;
+        
+        auto cmp = [&](auto p1, auto p2) {
+            return res[p1.first] * primes[p1.second] > res[p2.first] * primes[p2.second];
+        };
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> pq(cmp);
+        
+        for (int i = 0; i < primes.size(); ++i) pq.emplace(0, i);
+        
+        int i = 1;
+        while (i < n) {
+            auto [idx, pos] = pq.top();
+            pq.pop();
+            
+            int num = res[idx] * primes[pos];
+            
+            //remove duplicate
+            if (res[i-1] != num) res[i++] = num;
+
+            pq.emplace(idx+1, pos);
+        }
+        
+        return res[n-1];
+    }
+};
+
+
+
+
+
 class Solution {
 public:
     int nthSuperUglyNumber(int n, vector<int>& primes) {
@@ -39,4 +73,3 @@ public:
         return pq.top();
     }
 };
-*/

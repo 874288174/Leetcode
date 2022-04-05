@@ -22,7 +22,7 @@ public:
 
 
 
-//O(nlogn)
+//O(n)
 class Solution {
 public:
     int maxChunksToSorted(vector<int>& arr) {
@@ -46,7 +46,7 @@ public:
 
 
 
-//O(n)
+//O(nlogn)
 class Solution {
 public:
     int maxChunksToSorted(vector<int>& arr) {
